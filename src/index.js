@@ -1,23 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux'
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import store from "./store";
+import {bindActionCreators} from 'redux'
 import {updateCurrent} from './reducers/todo'
 
-const todoChangeHandler = (val) => store.dispatch(updateCurrent(val))
 
-const render = () => {
-    const state = store.getState()
-    ReactDOM.render(<App todos={state.todos} 
-        currentTodo={state.currentTodo}
-        changeCurrent={todoChangeHandler} />, document.getElementById('root'));
-}
+const actions = bindActionCreators({updateCurrent}, store.dispatch)
 
-render()
 
-store.subscribe(render) //calls render everytime the store updates
+
+ReactDOM.render(
+    <Provider store={store}>
+        <App changeCurrent={actions.updateCurrent} />
+    </Provider>,
+document.getElementById('root'));
+
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
